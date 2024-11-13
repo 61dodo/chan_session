@@ -22,7 +22,7 @@ export class AuthService {
 
   // 로그인하여 accessToken과 refreshToken 발급
   async login(user: any) {
-    const payload = { username: user.username, sub: user.id };
+    const payload = { username: user.username, sub: user.id, role: user.role }; // role 추가
     return {
       access_token: this.jwtService.sign(payload),
       refresh_token: this.generateRefreshToken(user.id),

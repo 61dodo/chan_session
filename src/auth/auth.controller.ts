@@ -15,6 +15,9 @@ export class AuthController {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    setTimeout(() => {
+      console.log('로그인 되었습니다!');
+    }, 10000);
     return this.authService.login(user);
   }
 }

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class UsersService {
@@ -11,6 +12,13 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
+  @Cron('*/10 * * * * *')
+  async handleCron() {
+    await this.findAll().then((users) => {
+      console.log('users:', users);
+    });
+  }
 
   async findOne(username: string): Promise<User | undefined> {
     const user = await this.usersRepository.findOne({ where: { username } });
@@ -27,6 +35,7 @@ export class UsersService {
     const newUser = this.usersRepository.create({
       username: createUserDto.username,
       password: hashedPassword,
+      role: createUserDto.role,
     });
 
     return this.usersRepository.save(newUser);
